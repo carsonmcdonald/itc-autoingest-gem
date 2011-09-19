@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = ITCAutoingest::VERSION
   s.authors     = ["Carson McDonald"]
   s.email       = ["carson@ioncannon.net"]
-  s.homepage    = "http://github.com/carsonmcdonald/itc-autoingest"
+  s.homepage    = "http://github.com/carsonmcdonald/itc-autoingest-gem"
   s.summary     = %q{ITC Autoingest is a gem for fetching iTunes connect reports.}
   s.description = %q{This library makes it easy to fetch iTunes connect reports using the official autoingest system.}
 
