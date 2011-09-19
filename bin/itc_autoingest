@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require "itc_autoingest"
+
+abort "USAGE #{$0} <username> <password> <vendorid> <report_type> <date_type> <report_subtype> <date_yyyymmdd>" if ARGV.length != 7
+
+username = ARGV[0]
+password = ARGV[1]
+vendorid = ARGV[2]
+reporttype = ARGV[3]
+datetype = ARGV[4]
+reportsubtype = ARGV[5]
+reportdate = ARGV[6]
+
+itca = ITCAutoingest::ITCAutoingest.new(username, password, vendorid)
+report = itca.send("#{datetype.downcase}_#{reporttype.downcase}_#{reportsubtype.sub('-', '').downcase}_report", reportdate)
+
+if report[:error].nil?
+  if report[:report].size == 0
+    puts "Nothing to report."
+  else
+    os = ''
+    report[:report][0].keys.each { |header|
+      os = os + "#{header}\t"
+    }
+    os = os + "\n"
+    report[:report].each { |item|
+      item.values.each { |value|
+        os = os + "#{value}\t"
+      }
+      os = os + "\n"
+    }
+    puts os
+  end
+else
+  puts report[:error]
+end
