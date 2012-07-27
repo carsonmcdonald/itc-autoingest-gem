@@ -23,7 +23,11 @@ module ITCAutoingest
             (class << self; self; end).class_eval {
               define_method("#{timeframe.downcase}_#{report_type.downcase}_#{report_sub_type.sub('-', '').downcase}_report") { |*args|
                 reportdate = (args.length == 0 ? (Time.now - 86400).strftime('%Y%m%d') : args[0])
-                self.send('ingest', report_type, timeframe, report_sub_type, reportdate)
+                self.send('ingest', report_type, timeframe, report_sub_type, reportdate, :report)
+              }
+              define_method("#{timeframe.downcase}_#{report_type.downcase}_#{report_sub_type.sub('-', '').downcase}_raw") { |*args|
+                reportdate = (args.length == 0 ? (Time.now - 86400).strftime('%Y%m%d') : args[0])
+                self.send('ingest', report_type, timeframe, report_sub_type, reportdate, :raw)
               }
             }
           }
@@ -33,18 +37,30 @@ module ITCAutoingest
 
     private
 
-    def ingest(typeofreport, datetype, reporttype, reportdate)
+    def ingest(typeofreport, datetype, reporttype, reportdate, outputtype)
       query = { :TYPEOFREPORT => typeofreport, :DATETYPE => datetype, :REPORTTYPE => reporttype, :REPORTDATE => reportdate }
       query.merge!(@auth)
 
       response = self.class.post( '/autoingestion.tft', :query => query )
 
       if response.code != 200 
-        {:error => response.message}
+        if outputtype == :raw
+          response.message
+        else
+          {:error => response.message}
+        end
       elsif !response.headers['ERRORMSG'].nil?
-        {:error => response.headers['ERRORMSG']}
+        if outputtype == :raw
+          response.headers['ERRORMSG']
+        else
+          {:error => response.headers['ERRORMSG']}
+        end
       else
-        hash_response(response.body)
+        if outputtype == :raw
+          Zlib::GzipReader.new(StringIO.new(response.body)).read
+        else
+          hash_response(response.body)
+        end
       end
     end
 
