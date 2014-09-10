@@ -19,15 +19,19 @@ itc_autoingest <username> <password> <vendorid> <report type> <date type> <repor
 * username - your itunes connect username
 * password - your itunes connect password
 * vendorid - your itunes connect vendor id
-* report type - the only type currently supported is Sales
+* report type - there are two report types supported: Sales & Preorder
 * date type - there are two date types supported: Daily and Weekly
-* report subtype - there are two subtypes supported: Summary and Opt-In
+* report subtype - there are three subtypes supported: Summary, Detailed and Opt-In
 * date - the timeframe for the report in yyyymmdd format
 
 The gem has the following methods available:
 
 * daily_sales_summary_report(reportdate)
 * weekly_sales_summary_report(reportdate)
+* daily_sales_detailed_report(reportdate)
+* weekly_sales_detailed_report(reportdate)
+* daily_preorder_summary_report(reportdate)
+* weekly_preorder_summary_report(reportdate)
 * daily_sales_optin_report(reportdate)
 * weekly_sales_optin_report(reportdate)
 
