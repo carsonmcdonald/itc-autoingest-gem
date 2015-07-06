@@ -10,7 +10,7 @@ module ITCAutoingest
 
     base_uri 'https://reportingitc.apple.com'
 
-    REPORT_TYPES = ['Sales','Preorder']
+    REPORT_TYPES = ['Sales','Preorder', 'amEvent', 'amContent']
     REPORT_SUB_TYPES = ['Summary', 'Opt-In', 'Detailed']
     REPORT_TIMEFRAME = ['Daily', 'Weekly']
 
